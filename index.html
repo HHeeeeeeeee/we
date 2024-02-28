@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>결혼식 초대장</title>
+  <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+  <script src="https://unpkg.com/antd/dist/antd.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/antd/dist/antd.min.css">
   <style>
-    /* App.css 내용을 여기에 삽입 */
-    * {
-      font-family: 'Noto Serif KR', serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-        'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Noto Serif KR', serif;
     }
     /* 기타 필요한 CSS 스타일 */
   </style>
@@ -17,36 +21,85 @@
 <body>
   <div id="root"></div>
 
-  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-  <!-- styled-components 라이브러리 추가 -->
-  <script crossorigin src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
-
   <script>
-    // Config.js 내용을 변수로 정의
+    const { useState } = React;
+    const { Modal, Button, message, Divider } = antd;
+
+    // Styled-components 스타일 정의
+    const Wrapper = styled.div\`
+      background: #efebe9;
+      padding-left: 42px;
+      padding-right: 42px;
+      padding-bottom: 18px;
+      width: 100%;
+      text-align: center;
+    \`;
+
+    const Title = styled.p\`
+      font-size: 2vh;
+      font-weight: bold;
+      opacity: 0.85;
+      margin-bottom: 0;
+    \`;
+
+    const Content = styled.p\`
+      font-size: 1.5vh;
+      line-height: 1.75;
+      opacity: 0.75;
+      margin-bottom: 24px;
+    \`;
+
+    const SubContent = styled.p\`
+      font-size: 1.3vh;
+      line-height: 1.75;
+      opacity: 0.75;
+      margin-bottom: 24px;
+    \`;
+
+    const Description = styled.p\`
+      font-size: 1.75vh;
+      line-height: 1.75;
+      opacity: 0.65;
+      margin-top: 8px;
+    \`;
+
+    // Config 변수 정의
     const Config = {
       WEDDING_DATE: '2024년 06월 01일 토요일 오후 4시',
       WEDDING_LOCATION: '서울 ○○웨딩홀',
       GROOM_NAME: '김철수',
       BRIDE_NAME: '이영희',
-      // 기타 필요한 설정 값들
     };
 
-    // Title 컴포넌트 예시
-    const Title = () => {
-      return React.createElement('h1', null, `${Config.GROOM_NAME} & ${Config.BRIDE_NAME}의 결혼식에 초대합니다!`);
-    };
+    // 컴포넌트 정의
+    const CongratulatoryMoney = () => {
+      const [visible, setVisible] = useState(false);
 
-    // App 컴포넌트
-    const App = () => {
-      return React.createElement('div', null,
-        React.createElement(Title, null)
-        // 여기에 다른 컴포넌트들 추가
+      const showModal = () => setVisible(true);
+      const handleOk = () => setVisible(false);
+      const handleCancel = () => setVisible(false);
+
+      return React.createElement(Wrapper, {},
+        React.createElement(Divider, { plain: true, style: { marginTop: 0, marginBottom: 32 }},
+          React.createElement(Title, {}, "축하의 마음을 전하세요")
+        ),
+        React.createElement(Content, {}, "축하의 마음을 담아 축의금을 전달해 보세요."),
+        React.createElement(Button, { type: "primary", onClick: showModal }, "계좌번호 보기"),
+        React.createElement(Modal, { title: "계좌번호", visible, onOk: handleOk, onCancel: handleCancel },
+          React.createElement(Description, {}, `신랑 ${Config.GROOM_NAME} 계좌번호: XXX-XXX-XXXX`),
+          React.createElement(Description, {}, `신부 ${Config.BRIDE_NAME} 계좌번호: XXX-XXX-XXXX`)
+        )
       );
     };
 
-    // React 앱 렌더링
-    ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
+    const App = () => {
+      return React.createElement('div', null,
+        React.createElement('h1', null, `${Config.GROOM_NAME} & ${Config.BRIDE_NAME}의 결혼식에 초대합니다!`),
+        React.createElement(CongratulatoryMoney, null)
+      );
+    };
+
+    ReactDOM.render(React.createElement(App), document.getElementById('root'));
   </script>
 </body>
 </html>
